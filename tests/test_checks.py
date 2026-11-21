@@ -119,6 +119,26 @@ def test_unregistered_and_crashing_semantic_checks():
 @pytest.mark.parametrize(
     "bad",
     [
+        {
+            "edge": {"name": "x", "producer": "a", "consumer": "b"},
+            "fields": {"f": {"type": "int", "min_length": 1}},
+        },
+        {
+            "edge": {"name": "x", "producer": "a", "consumer": "b"},
+            "fields": {"f": {"type": "str", "min_length": "3"}},
+        },
+        {
+            "edge": {"name": "x", "producer": "a", "consumer": "b"},
+            "fields": {"f": {"type": "str", "min_items": 1}},
+        },
+        {
+            "edge": {"name": "x", "producer": "a", "consumer": "b"},
+            "fields": {"f": {"type": "str", "required": "no"}},
+        },
+        {
+            "edge": {"name": "x", "producer": "a", "consumer": "b"},
+            "fields": {"f": {"type": "str", "enum": "abc"}},
+        },
         {"edge": {"name": "x", "producer": "a"}, "fields": {"f": {"type": "str"}}},
         {"edge": {"name": "x", "producer": "a", "consumer": "b"}, "fields": {}},
         {
@@ -180,3 +200,41 @@ def test_decorator_checks_inbound(contract):
 def test_decorator_rejects_unknown_mode(contract):
     with pytest.raises(ValueError):
         guard(outbound=contract, mode="loud")
+
+
+def test_items_rules_on_a_plain_list():
+    """Broken case: min_items and max_items were skipped for type = "list"."""
+    c = parse(
+        {
+            "edge": {"name": "e", "producer": "a", "consumer": "b"},
+            "fields": {"f": {"type": "list", "min_items": 1, "max_items": 2}},
+        }
+    )
+    assert check(c, {"f": [1]}).ok
+    assert ("f", "min_items") in rules(check(c, {"f": []}))
+    assert ("f", "max_items") in rules(check(c, {"f": [1, 2, 3]}))
+
+
+@pytest.mark.parametrize(
+    "returned, ok",
+    [
+        (None, True),
+        (True, True),
+        ([], True),
+        (False, False),
+        ("bad", False),
+        (["a", "b"], False),
+        (3, False),
+    ],
+)
+def test_semantic_return_values(returned, ok):
+    """Broken case: a check that returned True crashed check(), and False counted as a pass."""
+    semantic("returns_value")(lambda m, c: returned)
+    c = parse(
+        {
+            "edge": {"name": "e", "producer": "a", "consumer": "b"},
+            "fields": {"f": {"type": "str"}},
+            "semantic": {"checks": ["returns_value"]},
+        }
+    )
+    assert check(c, {"f": "x"}).ok is ok

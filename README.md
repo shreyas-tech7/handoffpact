@@ -133,6 +133,9 @@ The pytest plugin loads through an entry point. Any test can ask for the `handof
 - The same author wrote the leak phrases and the instruction patterns. The phrases came first and some are meant to slip past, but the leak detection rate is still likely optimistic.
 - Contracts cannot catch an answer that is wrong but well formed. A cut question that still reads fine, or last turn's intent, passes every rule.
 - Zero false alarms on clean runs comes from a clean corpus and a scripted model. Real text will trip the instruction patterns sometimes. Warn mode exists for that rollout.
+- Blast radius counts later steps by position. It does not weigh how bad each step's output was, and a step that crashes counts as a stop.
+- The `intent` field is checked against the enum, not against the ticket text. A wrong but valid intent passes.
+- `TrackedDict` sees reads through `[]`, `.get()` and `in`. A consumer that copies the whole message with `dict()` or reads `.items()` can drift without the test noticing.
 - No record mode run with a real model was done. The free provider hosts were not reachable from the build machine.
 
 ## Glossary

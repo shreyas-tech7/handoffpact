@@ -114,12 +114,13 @@ def run_bench(faults: int, clean: int, seed: int) -> dict:
     runs, skipped = [], 0
     i = 0
     per_type = {k: 0 for k in FAULTS}
-    want = faults // len(FAULTS)
-    while min(per_type.values()) < want:
+    base, extra = divmod(faults, len(FAULTS))
+    want = {k: base + (j < extra) for j, k in enumerate(FAULTS)}
+    while any(per_type[k] < want[k] for k in FAULTS):
         s = seed + i
         kind = FAULTS[i % len(FAULTS)]
         i += 1
-        if per_type[kind] >= want:
+        if per_type[kind] >= want[kind]:
             continue
         r = one_fault_run(s, kind)
         if r is None:

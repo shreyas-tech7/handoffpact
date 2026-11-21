@@ -3,12 +3,11 @@
 Branch: `claude/project-thread-kd42dy` on origin `shreyas-tech7/handoffpact` and on the backup remote.
 
 ## Done
-Everything in feature_list.json except F12 passes. See PROGRESS.md.
+Every feature in feature_list.json passes. The release SHA is in CHANGELOG.md and docs/HUMAN_STEPS.md.
 
 ## Next
-1. Read the outside check result in docs/RELEASE_CHECK.md and fix what it finds.
-2. Write the release SHA into CHANGELOG.md and docs/HUMAN_STEPS.md (replace RELEASE_SHA_PENDING).
-3. Push to origin and backup, write the bundle, copy the report to /mnt/project-files/portfolio/reports/handoffpact.md, update the handoffpact row in QUEUE2.md.
+1. Human steps in docs/HUMAN_STEPS.md.
+2. Optional stretch: record mode with a real model once a provider host is reachable.
 
 ## Commands
 - `./init.sh`

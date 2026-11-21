@@ -36,8 +36,9 @@ _SEMANTIC: dict[str, Callable[[dict, dict], list[str] | str | None]] = {}
 
 
 def semantic(name: str):
-    """Register a semantic check by name. It gets (message, context) and returns a
-    problem string, a list of problem strings, or None when the message is fine."""
+    """Register a semantic check by name. It gets (message, context) and returns None,
+    True or an empty list when the message is fine, and False, a problem string or a
+    list of problem strings when it is not."""
 
     def deco(fn):
         _SEMANTIC[name] = fn
@@ -113,6 +114,27 @@ def _known_type(t: str) -> bool:
     return t in TYPES or (inner is not None and inner in TYPES)
 
 
+def _check_rules(source: str, fname: str, spec: dict) -> None:
+    """Reject rules that cannot apply to the field's type, and rule values of the wrong type."""
+    t = spec["type"]
+    is_list = t == "list" or t.startswith("list[")
+    inner = t[5:-1] if t.startswith("list[") else None
+    stringy = t == "str" or inner == "str"
+    for key in ("min_length", "max_length", "min_items", "max_items"):
+        if key in spec and (not isinstance(spec[key], int) or isinstance(spec[key], bool)):
+            raise ContractError(f"{source}: field {fname!r} rule {key} must be an integer")
+    if ("min_length" in spec or "max_length" in spec) and not stringy:
+        raise ContractError(f"{source}: field {fname!r} has a length rule but is not a string")
+    if ("min_items" in spec or "max_items" in spec) and not is_list:
+        raise ContractError(f"{source}: field {fname!r} has an items rule but is not a list")
+    if "required" in spec and not isinstance(spec["required"], bool):
+        raise ContractError(f"{source}: field {fname!r} rule required must be true or false")
+    if "enum" in spec and not isinstance(spec["enum"], list):
+        raise ContractError(f"{source}: field {fname!r} rule enum must be a list")
+    if "ref" in spec and not isinstance(spec["ref"], str):
+        raise ContractError(f"{source}: field {fname!r} rule ref must be a path string")
+
+
 def parse(data: dict, source: str = "") -> Contract:
     edge = data.get("edge", {})
     for key in ("name", "producer", "consumer"):
@@ -125,6 +147,7 @@ def parse(data: dict, source: str = "") -> Contract:
             raise ContractError(f"{source}: field {fname!r} has unknown keys {sorted(unknown)}")
         if not _known_type(spec.get("type", "")):
             raise ContractError(f"{source}: field {fname!r} has unknown type {spec.get('type')!r}")
+        _check_rules(source, fname, spec)
         enum = tuple(spec["enum"]) if "enum" in spec else None
         fields[fname] = FieldSpec(name=fname, **{**spec, "enum": enum})
     if not fields:
@@ -203,6 +226,19 @@ def _check_value(spec: FieldSpec, path: str, value: Any, refs: list | None) -> l
     return out
 
 
+def _problems(got) -> list[str]:
+    """None, True or an empty list mean pass. False, a string or a list of strings mean fail."""
+    if got is None or got is True:
+        return []
+    if got is False:
+        return ["check returned False"]
+    if isinstance(got, str):
+        return [got]
+    if isinstance(got, list | tuple):
+        return [str(p) for p in got]
+    return [f"check returned {type(got).__name__}, want None, a bool, a string or a list"]
+
+
 def check(edge: Contract, message: Any, context: dict | None = None) -> Result:
     """Check one handoff message. Returns a Result. `result.ok` is True when it passes."""
     context = context or {}
@@ -222,7 +258,7 @@ def check(edge: Contract, message: Any, context: dict | None = None) -> Result:
             found = resolve(context, spec.ref)
             flat = [x for r in found for x in (r if isinstance(r, list) else [r])]
             refs = [r for r in flat if _hashable(r)]
-        if spec.item_type:
+        if spec.item_type or spec.type == "list":
             if not isinstance(value, list):
                 v.append(Violation(name, "type", f"want {spec.type}, got {type(value).__name__}"))
                 continue
@@ -230,8 +266,9 @@ def check(edge: Contract, message: Any, context: dict | None = None) -> Result:
                 v.append(Violation(name, "min_items", f"{len(value)} < {spec.min_items}"))
             if spec.max_items is not None and len(value) > spec.max_items:
                 v.append(Violation(name, "max_items", f"{len(value)} > {spec.max_items}"))
-            for i, item in enumerate(value):
-                v.extend(_check_value(spec, f"{name}[{i}]", item, refs))
+            if spec.item_type:
+                for i, item in enumerate(value):
+                    v.extend(_check_value(spec, f"{name}[{i}]", item, refs))
         else:
             v.extend(_check_value(spec, name, value, refs))
     if edge.extra == "forbid":
@@ -244,11 +281,9 @@ def check(edge: Contract, message: Any, context: dict | None = None) -> Result:
             v.append(Violation("$", f"semantic:{cname}", "check is not registered"))
             continue
         try:
-            problems = fn(message, context)
+            problems = _problems(fn(message, context))
         except Exception as exc:  # a crashing check is a failed check, not a crash
-            problems = f"check raised {type(exc).__name__}: {exc}"
-        if isinstance(problems, str):
-            problems = [problems]
-        for p in problems or []:
+            problems = [f"check raised {type(exc).__name__}: {exc}"]
+        for p in problems:
             v.append(Violation("$", f"semantic:{cname}", p))
     return res

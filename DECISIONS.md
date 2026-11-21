@@ -22,3 +22,5 @@ One line per choice: the options weighed and the reason.
 - 2026-11-21 Wilson interval upper bound is set to exactly 1.0 when every run is detected. Float rounding gave 0.9999999, which broke the lo <= rate <= hi check.
 - 2026-11-21 The plugin entry point worked, so the fixture module fallback from the brief was not needed.
 - 2026-11-21 Mutation check: with the `get` tracking removed from TrackedDict, the planted drift test failed to catch the drift. With the ref rule disabled, the ref tests failed. Both restored.
+- 2026-11-21 Outside review fixes: items rules now apply to plain `list` fields, parse rejects rules that do not fit the field type, semantic checks may return True or False, and per-type run counts use divmod so no run is dropped. Results files are byte-identical in every counted field after the fixes.
+- 2026-11-21 Branch is `claude/project-thread-kd42dy`, not `claude/build-handoffpact`, because this session may push only to that branch.

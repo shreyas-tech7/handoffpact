@@ -49,3 +49,10 @@ def test_bench_is_seeded():
     a = run_bench(faults=14, clean=5, seed=3)
     b = run_bench(faults=14, clean=5, seed=3)
     assert a["runs"] == b["runs"]
+
+
+def test_odd_run_count_is_kept():
+    """Broken case: faults // 7 rounded 500 runs down to 497."""
+    r = run_bench(faults=10, clean=2, seed=5)
+    assert r["meta"]["fault_runs"] == 10
+    assert sorted(r["meta"]["fault_mix"].values()) == [1, 1, 1, 1, 2, 2, 2]
