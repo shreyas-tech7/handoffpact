@@ -12,6 +12,7 @@ def test_wilson_known_values():
     lo, hi = wilson(50, 100)
     assert lo == pytest.approx(0.4038, abs=1e-3) and hi == pytest.approx(0.5962, abs=1e-3)
     assert wilson(0, 0) == (0.0, 0.0)
+    assert wilson(300, 300)[1] == 1.0  # broken case: float rounding gave 0.9999999
 
 
 def test_mean_ci_contains_mean():

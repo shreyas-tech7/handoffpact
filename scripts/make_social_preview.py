@@ -96,13 +96,15 @@ def png(px) -> bytes:
 def main() -> None:
     px = canvas()
     rect(px, 0, 0, W, 12, ACCENT)
-    text(px, "gatedmind", 80, 110, 14, FG)
-    text(px, "permission-aware rag", 84, 260, 5, ACCENT)
-    text(px, "leak rate per enforcement mode", 84, 330, 5, MUTED)
-    text(px, "pre-filter, post-filter, redact", 84, 390, 5, MUTED)
-    # A decorative bar trio. The heights are fixed shapes, not results.
-    for i, color in enumerate(BARS):
-        rect(px, 980 + i * 70, 560 - (120 + i * 60), 1030 + i * 70, 560, color)
+    text(px, "handoffpact", 80, 110, 14, FG)
+    text(px, "contract checks for agent handoffs", 84, 260, 5, ACCENT)
+    text(px, "stop a bad message at the boundary", 84, 330, 5, MUTED)
+    text(px, "and measure the blast radius", 84, 390, 5, MUTED)
+    # A decorative chain of four agent boxes. The shapes are fixed, not results.
+    for i, color in enumerate(BARS + [ACCENT]):
+        rect(px, 700 + i * 130, 480, 790 + i * 130, 540, color)
+        if i < 3:
+            rect(px, 790 + i * 130, 506, 830 + i * 130, 514, MUTED)
     rect(px, 80, 570, 1200, 574, MUTED)
     out = Path(__file__).resolve().parents[1] / "docs" / "social-preview.png"
     out.write_bytes(png(px))

@@ -34,7 +34,9 @@ def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     d = 1 + z * z / n
     c = (p + z * z / (2 * n)) / d
     h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
-    return (max(0.0, c - h), min(1.0, c + h))
+    lo = 0.0 if k == 0 else max(0.0, c - h)
+    hi = 1.0 if k == n else min(1.0, c + h)
+    return (lo, hi)
 
 
 def mean_ci(xs: list[float], seed: int, reps: int = 2000) -> tuple[float, float, float]:

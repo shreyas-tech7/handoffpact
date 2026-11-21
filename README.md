@@ -103,7 +103,7 @@ Open the static results page from disk: [docs/index.html](docs/index.html).
 
 <!-- gen:cost -->
 Cost per task: $0.00. The scripted model makes no API calls.
-The whole benchmark (11000 ticket runs) took 1.29 s on 1 core of an Intel(R) Xeon(R) Processor @ 2.10GHz, Python 3.13.18, on 2026-11-21. That is about 0.12 ms per ticket run, four contract checks included.
+The whole benchmark (11000 ticket runs) took 1.2 s on 1 core of an Intel(R) Xeon(R) Processor @ 2.10GHz, Python 3.13.18, on 2026-11-21. That is about 0.11 ms per ticket run, four contract checks included.
 <!-- /gen:cost -->
 
 ## Run it in 10 minutes
