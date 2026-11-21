@@ -1,14 +1,123 @@
 [
-  {"id": "F01", "area": "init", "description": "Initializer files: memory files, init.sh, CLAUDE.md, PROJECT_CONTEXT.md, PLAN.md, LICENSE, .env.example, secret scan hook", "steps": ["./init.sh", "test -f docs/build/BUILD_PROMPT.md", "test -f docs/PLAN.md", "grep -q gitleaks .pre-commit-config.yaml"], "passes": false},
-  {"id": "F02", "area": "contract", "description": "TOML contract format and parser that rejects bad contract files", "steps": [".venv/bin/python -m pytest tests/test_checks.py -k bad_contract"], "passes": false},
-  {"id": "F03", "area": "contract", "description": "check(edge, message, context) for every check type (required, type, enum, length, items, ref, extra, semantic) with a failing bad case and a passing good case", "steps": [".venv/bin/python -m pytest tests/test_checks.py"], "passes": false},
-  {"id": "F04", "area": "decorator", "description": "guard decorator checks agent input and output, stop mode blocks and warn mode logs", "steps": [".venv/bin/python -m pytest tests/test_checks.py -k decorator"], "passes": false},
-  {"id": "F05", "area": "pipeline", "description": "Sample pipeline of four agents (intake, research, draft, review) on an invented policy corpus with a scripted model, four edge contracts and named semantic checks", "steps": [".venv/bin/python -m pytest tests/test_pipeline.py", ".venv/bin/handoffpact demo"], "passes": false},
-  {"id": "F06", "area": "faults", "description": "Fault injector with seven fault types: drop, wrong_type, invented_id, truncate, stale, leak, swap. Every fault changes the message", "steps": [".venv/bin/python -m pytest tests/test_faults.py"], "passes": false},
-  {"id": "F07", "area": "bench", "description": "Benchmark with at least 500 seeded fault runs and at least 200 clean runs: detection rate per fault type with 95% intervals, false alarms, blast radius with and without contracts", "steps": [".venv/bin/handoffpact bench --faults 1400 --clean 400 --seed 2026 --out results/final-seed2026.json", ".venv/bin/python -m pytest tests/test_bench.py"], "passes": false},
-  {"id": "F08", "area": "plugin", "description": "pytest plugin (pytest11 entry point) with the handoff_pact fixture catches a planted consumer drift in an example test", "steps": [".venv/bin/python -m pytest tests/test_plugin.py"], "passes": false},
-  {"id": "F09", "area": "docs", "description": "Docs generator writes one Markdown page per contract and a mermaid graph of the sample pipeline", "steps": [".venv/bin/handoffpact docs contracts --out docs/contracts", ".venv/bin/python -m pytest tests/test_docsgen.py"], "passes": false},
-  {"id": "F10", "area": "quality", "description": "README with all ten parts generated from results files, CI workflow and badge, topics, social preview, static results page, DEMO transcript, link checker, CHANGELOG, CONTRIBUTING, issue templates", "steps": [".venv/bin/handoffpact readme --check", ".venv/bin/python -m pytest tests/test_repo.py", ".venv/bin/python scripts/check_links.py"], "passes": false},
-  {"id": "F11", "area": "study", "description": "Study-later kit: WALKTHROUGH, INTERVIEW_QA, DECISIONS", "steps": ["test -f docs/WALKTHROUGH.md", "test -f docs/INTERVIEW_QA.md", "test -f DECISIONS.md"], "passes": false},
-  {"id": "F12", "area": "release", "description": "Release check (review, gitleaks, pip-audit, ruff S, actionlint, links, outside check) and hand-off (CHANGELOG SHA, HUMAN_STEPS, COWORK_PROMPT, GITHUB_ABOUT, topics)", "steps": ["test -f docs/RELEASE_CHECK.md", "test -f docs/HUMAN_STEPS.md", "test -f docs/handoff/COWORK_PROMPT.md", "grep -q v0.1.0-rc1 CHANGELOG.md"], "passes": false}
+ {
+  "id": "F01",
+  "area": "init",
+  "description": "Initializer files: memory files, init.sh, CLAUDE.md, PROJECT_CONTEXT.md, PLAN.md, LICENSE, .env.example, secret scan hook",
+  "steps": [
+   "./init.sh",
+   "test -f docs/build/BUILD_PROMPT.md",
+   "test -f docs/PLAN.md",
+   "grep -q gitleaks .pre-commit-config.yaml"
+  ],
+  "passes": true
+ },
+ {
+  "id": "F02",
+  "area": "contract",
+  "description": "TOML contract format and parser that rejects bad contract files",
+  "steps": [
+   ".venv/bin/python -m pytest tests/test_checks.py -k bad_contract"
+  ],
+  "passes": true
+ },
+ {
+  "id": "F03",
+  "area": "contract",
+  "description": "check(edge, message, context) for every check type (required, type, enum, length, items, ref, extra, semantic) with a failing bad case and a passing good case",
+  "steps": [
+   ".venv/bin/python -m pytest tests/test_checks.py"
+  ],
+  "passes": true
+ },
+ {
+  "id": "F04",
+  "area": "decorator",
+  "description": "guard decorator checks agent input and output, stop mode blocks and warn mode logs",
+  "steps": [
+   ".venv/bin/python -m pytest tests/test_checks.py -k decorator"
+  ],
+  "passes": true
+ },
+ {
+  "id": "F05",
+  "area": "pipeline",
+  "description": "Sample pipeline of four agents (intake, research, draft, review) on an invented policy corpus with a scripted model, four edge contracts and named semantic checks",
+  "steps": [
+   ".venv/bin/python -m pytest tests/test_pipeline.py",
+   ".venv/bin/handoffpact demo"
+  ],
+  "passes": true
+ },
+ {
+  "id": "F06",
+  "area": "faults",
+  "description": "Fault injector with seven fault types: drop, wrong_type, invented_id, truncate, stale, leak, swap. Every fault changes the message",
+  "steps": [
+   ".venv/bin/python -m pytest tests/test_faults.py"
+  ],
+  "passes": true
+ },
+ {
+  "id": "F07",
+  "area": "bench",
+  "description": "Benchmark with at least 500 seeded fault runs and at least 200 clean runs: detection rate per fault type with 95% intervals, false alarms, blast radius with and without contracts",
+  "steps": [
+   ".venv/bin/handoffpact bench --faults 2100 --clean 500 --seed 2026 --out results/final-seed2026.json",
+   ".venv/bin/python -m pytest tests/test_bench.py"
+  ],
+  "passes": true
+ },
+ {
+  "id": "F08",
+  "area": "plugin",
+  "description": "pytest plugin (pytest11 entry point) with the handoff_pact fixture catches a planted consumer drift in an example test",
+  "steps": [
+   ".venv/bin/python -m pytest tests/test_plugin.py"
+  ],
+  "passes": true
+ },
+ {
+  "id": "F09",
+  "area": "docs",
+  "description": "Docs generator writes one Markdown page per contract and a mermaid graph of the sample pipeline",
+  "steps": [
+   ".venv/bin/handoffpact docs contracts --out docs/contracts",
+   ".venv/bin/python -m pytest tests/test_docsgen.py"
+  ],
+  "passes": true
+ },
+ {
+  "id": "F10",
+  "area": "quality",
+  "description": "README with all ten parts generated from results files, CI workflow and badge, topics, social preview, static results page, DEMO transcript, link checker, CHANGELOG, CONTRIBUTING, issue templates",
+  "steps": [
+   ".venv/bin/handoffpact readme --check",
+   ".venv/bin/python -m pytest tests/test_repo.py",
+   ".venv/bin/python scripts/check_links.py"
+  ],
+  "passes": true
+ },
+ {
+  "id": "F11",
+  "area": "study",
+  "description": "Study-later kit: WALKTHROUGH, INTERVIEW_QA, DECISIONS",
+  "steps": [
+   "test -f docs/WALKTHROUGH.md",
+   "test -f docs/INTERVIEW_QA.md",
+   "test -f DECISIONS.md"
+  ],
+  "passes": true
+ },
+ {
+  "id": "F12",
+  "area": "release",
+  "description": "Release check (review, gitleaks, pip-audit, ruff S, actionlint, links, outside check) and hand-off (CHANGELOG SHA, HUMAN_STEPS, COWORK_PROMPT, GITHUB_ABOUT, topics)",
+  "steps": [
+   "test -f docs/RELEASE_CHECK.md",
+   "test -f docs/HUMAN_STEPS.md",
+   "test -f docs/handoff/COWORK_PROMPT.md",
+   "grep -q v0.1.0-rc1 CHANGELOG.md"
+  ],
+  "passes": false
+ }
 ]

@@ -45,12 +45,12 @@ def _demo() -> int:
 
 
 def _record(out: Path, n: int) -> int:
-    from .sample.pipeline import _inputs, intake, make_scenario, research
+    from .sample.pipeline import agent_input, intake, make_scenario, research
 
     lines = []
     for seed in range(n):
         ticket = make_scenario(seed)["tickets"][1]
-        inp = _inputs(1, ticket, intake(ticket))
+        inp = agent_input(1, ticket, intake(ticket))
         lines.append(json.dumps({"message": research(inp), "context": inp}, sort_keys=True))
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text("\n".join(lines) + "\n", encoding="utf-8")

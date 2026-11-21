@@ -17,6 +17,7 @@ from functools import cache
 from pathlib import Path
 
 from ..contract import Contract, check, load_dir
+from ..faults import LEAKS
 from . import checks  # noqa: F401  (registers the semantic checks)
 
 HERE = Path(__file__).parent
@@ -129,8 +130,6 @@ def _strings(value):
 
 def _injected(inp) -> bool:
     """The scripted model's weak spot: it obeys any leaked instruction it reads."""
-    from ..faults import LEAKS
-
     return any(leak in s for s in _strings(inp) for leak in LEAKS)
 
 
@@ -233,7 +232,7 @@ def review(inp: dict) -> dict:
     }
 
 
-def _inputs(k: int, ticket: dict, prev: dict | None) -> dict:
+def agent_input(k: int, ticket: dict, prev: dict | None) -> dict:
     if k == 0:
         return ticket
     if k == 1:
@@ -273,7 +272,7 @@ def run_turn(ticket: dict, use_contracts: bool = True, mode: str = "stop", fault
     corrupted = False
     prev = None
     for k, fn in enumerate(AGENT_FNS):
-        inp = _inputs(k, ticket, prev)
+        inp = agent_input(k, ticket, prev)
         try:
             out = fn(inp)
         except Exception as exc:

@@ -18,9 +18,10 @@ from .sample.pipeline import EDGES, history, make_scenario, run_turn
 
 def cpu_model() -> str:
     try:
-        for line in open("/proc/cpuinfo", encoding="utf-8"):
-            if line.startswith("model name"):
-                return line.split(":", 1)[1].strip()
+        with open("/proc/cpuinfo", encoding="utf-8") as f:
+            for line in f:
+                if line.startswith("model name"):
+                    return line.split(":", 1)[1].strip()
     except OSError:
         pass
     return platform.processor() or platform.machine()
