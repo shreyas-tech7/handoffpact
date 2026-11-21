@@ -16,6 +16,16 @@ from .faults import FAULTS, inject
 from .sample.pipeline import EDGES, history, make_scenario, run_turn
 
 
+def cpu_model() -> str:
+    try:
+        for line in open("/proc/cpuinfo", encoding="utf-8"):
+            if line.startswith("model name"):
+                return line.split(":", 1)[1].strip()
+    except OSError:
+        pass
+    return platform.processor() or platform.machine()
+
+
 def wilson(k: int, n: int, z: float = 1.96) -> tuple[float, float]:
     """95% Wilson score interval for k successes in n trials."""
     if n == 0:
@@ -125,6 +135,8 @@ def run_bench(faults: int, clean: int, seed: int) -> dict:
                 key = f"{edge}:{rule}"
                 alarm_rules[key] = alarm_rules.get(key, 0) + 1
     elapsed = time.perf_counter() - t0
+    # Each fault run does 5 ticket runs (plan, history, clean, with and without contracts).
+    pipeline_runs = 5 * len(runs) + clean
 
     by_type = {}
     for kind in FAULTS:
@@ -156,7 +168,9 @@ def run_bench(faults: int, clean: int, seed: int) -> dict:
             "fault_mix": per_type,
             "skipped_not_applicable": skipped,
             "seconds": round(elapsed, 2),
-            "cpu": platform.processor() or platform.machine(),
+            "cpu": cpu_model(),
+            "cores_used": 1,
+            "pipeline_runs": pipeline_runs,
             "python": platform.python_version(),
             "cost_usd": 0.0,
         },
