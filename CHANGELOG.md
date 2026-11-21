@@ -2,7 +2,7 @@
 
 ## v0.1.0-rc1 (2026-11-21)
 
-Release commit: RELEASE_SHA_PENDING
+Release commit: 099a0d95e80506354afcd232f0e1808f73837fb7
 
 - TOML contract format for one agent graph edge: required fields, types, enums, length limits, list sizes, ID references into the producer's input context, unknown field policy and named semantic checks.
 - `check(edge, message, context)` returns a result with violations and field paths.
