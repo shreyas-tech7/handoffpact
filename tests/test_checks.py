@@ -121,9 +121,18 @@ def test_unregistered_and_crashing_semantic_checks():
     [
         {"edge": {"name": "x", "producer": "a"}, "fields": {"f": {"type": "str"}}},
         {"edge": {"name": "x", "producer": "a", "consumer": "b"}, "fields": {}},
-        {"edge": {"name": "x", "producer": "a", "consumer": "b"}, "fields": {"f": {"type": "date"}}},
-        {"edge": {"name": "x", "producer": "a", "consumer": "b"}, "fields": {"f": {"type": "str", "max_len": 3}}},
-        {"edge": {"name": "x", "producer": "a", "consumer": "b", "extra": "maybe"}, "fields": {"f": {"type": "str"}}},
+        {
+            "edge": {"name": "x", "producer": "a", "consumer": "b"},
+            "fields": {"f": {"type": "date"}},
+        },
+        {
+            "edge": {"name": "x", "producer": "a", "consumer": "b"},
+            "fields": {"f": {"type": "str", "max_len": 3}},
+        },
+        {
+            "edge": {"name": "x", "producer": "a", "consumer": "b", "extra": "maybe"},
+            "fields": {"f": {"type": "str"}},
+        },
     ],
 )
 def test_bad_contract_files_are_rejected(bad):

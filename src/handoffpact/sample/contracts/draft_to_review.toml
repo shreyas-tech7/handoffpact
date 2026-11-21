@@ -1,0 +1,40 @@
+[edge]
+name = "draft_to_review"
+producer = "draft"
+consumer = "review"
+description = "The drafter writes the reply and the refund amount. The reviewer decides whether it goes out."
+extra = "forbid"
+
+[fields.ticket_id]
+type = "str"
+ref = "handoff.ticket_id"
+
+[fields.turn]
+type = "int"
+ref = "turn"
+
+[fields.intent]
+type = "str"
+enum = ["refund", "shipping", "warranty", "account"]
+ref = "handoff.intent"
+
+[fields.order_id]
+type = "str"
+ref = "handoff.order_id"
+
+[fields.reply]
+type = "str"
+min_length = 40
+max_length = 700
+
+[fields.refund_amount]
+type = "float"
+
+[fields.cited_policy_ids]
+type = "list[str]"
+min_items = 1
+max_items = 3
+ref = "handoff.policy_ids"
+
+[semantic]
+checks = ["refund_matches_total", "reply_cites_policies", "reply_is_complete", "no_instruction_text"]
