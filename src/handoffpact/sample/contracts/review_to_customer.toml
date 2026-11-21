@@ -1,0 +1,28 @@
+[edge]
+name = "review_to_customer"
+producer = "review"
+consumer = "customer"
+description = "The reviewer approves or escalates. An approved reply goes to the customer as written."
+extra = "forbid"
+
+[fields.ticket_id]
+type = "str"
+ref = "handoff.ticket_id"
+
+[fields.turn]
+type = "int"
+ref = "turn"
+
+[fields.approved]
+type = "bool"
+
+[fields.reply]
+type = "str"
+min_length = 40
+max_length = 700
+
+[fields.refund_amount]
+type = "float"
+
+[semantic]
+checks = ["review_keeps_draft", "reply_is_complete", "no_instruction_text"]

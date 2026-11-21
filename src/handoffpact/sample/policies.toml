@@ -1,0 +1,73 @@
+# An invented policy corpus for the sample pipeline. No real company. No real rules.
+
+[[policy]]
+id = "P-01"
+intent = "refund"
+title = "Standard refunds"
+text = "Customers can get a full refund within 30 days of the order date. The refund goes back to the original payment method. Items must be unused and in the original box."
+
+[[policy]]
+id = "P-02"
+intent = "refund"
+title = "Damaged items"
+text = "If an item arrives damaged, we refund the full order total within 45 days of the order date. A photo of the damage helps us process the claim faster."
+
+[[policy]]
+id = "P-03"
+intent = "refund"
+title = "Late refunds"
+text = "After the refund window closes, we offer store credit instead of a refund. Store credit never expires and works on any product."
+
+[[policy]]
+id = "P-04"
+intent = "shipping"
+title = "Delivery times"
+text = "Standard shipping takes 5 to 7 business days. Express shipping takes 2 business days. Orders ship from our warehouse within one business day."
+
+[[policy]]
+id = "P-05"
+intent = "shipping"
+title = "Lost parcels"
+text = "If tracking shows no movement for 10 business days, we treat the parcel as lost. We then send a replacement at no cost to the customer."
+
+[[policy]]
+id = "P-06"
+intent = "shipping"
+title = "Address changes"
+text = "We can change the delivery address until the order ships. After that, the customer must contact the carrier with the tracking number."
+
+[[policy]]
+id = "P-07"
+intent = "warranty"
+title = "Warranty length"
+text = "Every device has a warranty for 12 months from the order date. The warranty covers defects in parts and work, but not drops or water damage."
+
+[[policy]]
+id = "P-08"
+intent = "warranty"
+title = "Warranty claims"
+text = "To start a warranty claim, the customer describes the fault and keeps the device. We send a prepaid label and repair or replace the device in 10 business days."
+
+[[policy]]
+id = "P-09"
+intent = "account"
+title = "Email changes"
+text = "Customers can change the email on their account from the settings page. We send a confirmation link to both the old and the new address."
+
+[[policy]]
+id = "P-10"
+intent = "account"
+title = "Password resets"
+text = "A password reset link stays valid for one hour. Support staff never ask for a password and cannot see it."
+
+[[policy]]
+id = "P-11"
+intent = "account"
+title = "Closing an account"
+text = "Customers can close an account at any time. Open orders still ship, and refunds still go to the original payment method."
+
+[[policy]]
+id = "P-12"
+intent = "warranty"
+title = "Extended warranty"
+text = "An extended warranty adds 24 months to the standard warranty. It can be bought within 30 days of the order date."

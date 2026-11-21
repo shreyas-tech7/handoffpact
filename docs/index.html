@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>handoffpact results</title>
+<style>
+:root { --bg: #ffffff; --fg: #1f2328; --muted: #59636e; --line: #d1d9e0; --accent: #0969da; }
+@media (prefers-color-scheme: dark) { :root { --bg: #0d1117; --fg: #e6edf3; --muted: #9aa4ae; --line: #30363d; --accent: #6ea8ff; } }
+body { background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, sans-serif; margin: 0 auto; max-width: 1100px; padding: 24px 16px; }
+h1 { margin-bottom: 4px; } p { color: var(--muted); }
+.wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { border-bottom: 1px solid var(--line); padding: 8px; text-align: left; vertical-align: top; }
+th { color: var(--accent); }
+</style>
+</head>
+<body>
+<h1 id="results">handoffpact results</h1>
+<p>Run of 2026-11-21, model: scripted (no LLM), seed 2026. 2100 fault runs, 500 clean runs. Faults are injected by script. Faults from real models can look different.</p>
+<div class="wrap"><table><thead><tr><th>Fault (injected by script)</th><th>Stopped before delivery, 95% CI</th><th>Blast radius with contracts</th><th>Blast radius without</th><th>Wrong answers delivered, with / without</th></tr></thead><tbody><tr><td>dropped field</td><td>300/300 = 100.0% (98.7 to 100.0)</td><td>0.00 (0.00 to 0.00)</td><td>0.54 (0.44 to 0.64)</td><td>0 / 78</td></tr><tr><td>wrong type</td><td>300/300 = 100.0% (98.7 to 100.0)</td><td>0.00 (0.00 to 0.00)</td><td>1.87 (1.72 to 2.02)</td><td>0 / 160</td></tr><tr><td>invented ID</td><td>300/300 = 100.0% (98.7 to 100.0)</td><td>0.00 (0.00 to 0.00)</td><td>2.18 (2.05 to 2.32)</td><td>0 / 173</td></tr><tr><td>truncated text</td><td>210/300 = 70.0% (64.6 to 74.9)</td><td>1.20 (0.99 to 1.41)</td><td>2.59 (2.46 to 2.71)</td><td>20 / 180</td></tr><tr><td>stale value from turn 1</td><td>284/300 = 94.7% (91.5 to 96.7)</td><td>0.18 (0.10 to 0.27)</td><td>2.58 (2.46 to 2.71)</td><td>16 / 230</td></tr><tr><td>instruction text in a data field</td><td>291/300 = 97.0% (94.4 to 98.4)</td><td>0.06 (0.03 to 0.10)</td><td>2.52 (2.39 to 2.64)</td><td>9 / 237</td></tr><tr><td>two fields swapped</td><td>300/300 = 100.0% (98.7 to 100.0)</td><td>0.00 (0.00 to 0.00)</td><td>1.64 (1.52 to 1.78)</td><td>0 / 217</td></tr><tr><td>all faults</td><td>1985/2100 = 94.5% (93.5 to 95.4)</td><td>0.21 (0.17 to 0.24)</td><td>1.99 (1.93 to 2.05)</td><td>45 / 1275</td></tr></tbody></table></div>
+<p>False alarms on clean runs: 0/500 = 0.0% (0.0 to 0.8).</p>
+<p>Cost per task: $0.00. The scripted model makes no API calls. The whole benchmark (11000 ticket runs) took 1.2 s on 1 core of an Intel(R) Xeon(R) Processor @ 2.10GHz, Python 3.13.18, on 2026-11-21. That is about 0.11 ms per ticket run, four contract checks included.</p>
+<p>Blast radius is the number of later steps (agents plus delivery to the customer) that run on corrupted data before something stops it. See <a href="../README.md">the README</a> and <a href="contracts/README.md">the contract graph</a>.</p>
+</body>
+</html>
