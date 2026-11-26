@@ -1,6 +1,6 @@
 # Handover
 
-Branch: `claude/project-thread-kd42dy` on origin `shreyas-tech7/handoffpact` and on the backup remote.
+Branch: `claude/project-thread-kd42dy` on origin `shreyas-tech7/handoffpact`.
 
 ## Done
 Every feature in feature_list.json passes. The release SHA is in CHANGELOG.md and docs/HUMAN_STEPS.md.

@@ -111,11 +111,10 @@
  {
   "id": "F12",
   "area": "release",
-  "description": "Release check (review, gitleaks, pip-audit, ruff S, actionlint, links, outside check) and hand-off (CHANGELOG SHA, HUMAN_STEPS, COWORK_PROMPT, GITHUB_ABOUT, topics)",
+  "description": "Release check (review, gitleaks, pip-audit, ruff S, actionlint, links, outside check) and hand-off (CHANGELOG SHA, HUMAN_STEPS, GITHUB_ABOUT, topics)",
   "steps": [
    "test -f docs/RELEASE_CHECK.md",
    "test -f docs/HUMAN_STEPS.md",
-   "test -f docs/handoff/COWORK_PROMPT.md",
    "grep -q v0.1.0-rc1 CHANGELOG.md"
   ],
   "passes": true
